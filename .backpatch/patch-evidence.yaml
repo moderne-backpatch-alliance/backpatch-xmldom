@@ -1,6 +1,6 @@
 schema: osera-patch-evidence/0.1.0
 producer: moderne
-release: 0.7.14-backpatch-00005
+release: 0.7.14-backpatch-00006
 baseline: v0.7.13+backpatch.baseline
 fixes:
   - cve: CVE-2026-34601
@@ -42,12 +42,28 @@ fixes:
     basis: adapted
     artifacts:
       - "@xmldom/xmldom"
-    note: "New in this release; upstream's fix in 0.8.13 (5a97781, fa47842, d809d6e, 83bc81e, f963f4d, c9a3b78, 375b372, e69f38d, 2bb3899, c007c51, 0b543d3, cbdb0d7, aeff69f, 842fa38), adapted to 0.7.13. It closes the advisory: xmldom: Uncontrolled recursion in XML serialization leads to DoS."
+    note: "Carried from 0.7.14-backpatch-00005; upstream's fix in 0.8.13 (5a97781, fa47842, d809d6e, 83bc81e, f963f4d, c9a3b78, 375b372, e69f38d, 2bb3899, c007c51, 0b543d3, cbdb0d7, aeff69f, 842fa38), adapted to 0.7.13. It closes the advisory: xmldom: Uncontrolled recursion in XML serialization leads to DoS."
+  - cve: CVE-2026-83605
+    upstream_fix_url: https://github.com/xmldom/xmldom/commit/88d9b20e9030387b2e97091a47ca89c3aed2d516
+    advisory_url: https://nvd.nist.gov/vuln/detail/CVE-2026-83605
+    patch_commit_url: https://github.com/moderne-backpatch-alliance/backpatch-xmldom/commit/55d0b70
+    basis: adapted
+    artifacts:
+      - "@xmldom/xmldom"
+    note: "New in this release; upstream's fix in 0.8.14 (88d9b20, d8212e6), adapted to 0.7.13. It closes the advisory: xmldom: Attribute name injection via setAttribute() bypasses requireWellFormed."
+  - cve: CVE-2026-83607
+    upstream_fix_url: https://github.com/xmldom/xmldom/commit/88d9b20e9030387b2e97091a47ca89c3aed2d516
+    advisory_url: https://nvd.nist.gov/vuln/detail/CVE-2026-83607
+    patch_commit_url: https://github.com/moderne-backpatch-alliance/backpatch-xmldom/commit/55d0b70
+    basis: adapted
+    artifacts:
+      - "@xmldom/xmldom"
+    note: "New in this release; upstream's fix in 0.8.14 (88d9b20, d8212e6), adapted to 0.7.13. It closes the advisory: xmldom: Element name injection via createElement() bypasses requireWellFormed."
 tests:
-  commit: 9b23f256159e80f6e7279536ac1522c79a1adecf
+  commit: 55d0b70e62355b80af89bc5001c2854e8d543a08
   command: npm pack --ignore-scripts, then jest 27.0.6 --ci on the tested commit's test/ with jest.config.js and package.json beside the packed package's lib/ and index.d.ts (node --stack-size from the commit's config.test_stack_size when set, as its npm test script does), each test recorded into the JUnit report
   runtime: Node.js v22.16.0, jest 27.0.6, macOS 27.2 arm64
-  report: xmldom-0.7.14-backpatch-00005-tests.zip
-  report_sha256: e107f8e12d3198b31f389c985e4dd1e2d1a1dd9cee83e38f308ff9fcb7c3d9ac
+  report: xmldom-0.7.14-backpatch-00006-tests.zip
+  report_sha256: 5349bedd29e6c485e2e4ede02a39a33bd6223e7da692348f94d73ce9c2b22087
   result: pass
-  note: "upstream's jest suite (test/, the tested commit's jest.config.js and stack size) on the packed package at the tested commit: 734 tests, 728 passed, 0 failed, 6 skipped. The CVE tests (test/dom/node.test.js test/dom/serializer.test.js test/dom/walk-dom.test.js test/recursion-regression.test.js), with this release's production lines reverted at the tested commit: 109 tests, 93 passed, 16 failed, 0 skipped, test files exiting non-zero: jest; with them: 109 tests, 109 passed, 0 failed, 0 skipped. Built with no build step, npm pack --ignore-scripts in a directory named xmldom, 9 of npmjs's 12 files for 0.7.13 are identical; the rest are index.d.ts, lib/dom.js, package.json. The archive's file-origins.yaml maps each packaged file to the commit, or names its inputs and build."
+  note: "upstream's jest suite (test/, the tested commit's jest.config.js and stack size) on the packed package at the tested commit: 744 tests, 738 passed, 0 failed, 6 skipped. The CVE tests (test/dom/serializer.test.js), with this release's production lines reverted at the tested commit: 53 tests, 49 passed, 4 failed, 0 skipped, test files exiting non-zero: jest; with them: 53 tests, 53 passed, 0 failed, 0 skipped. Built with no build step, npm pack --ignore-scripts in a directory named xmldom, 7 of npmjs's 12 files for 0.7.13 are identical; the rest are index.d.ts, lib/conventions.js, lib/dom.js, lib/sax.js, package.json. The archive's file-origins.yaml maps each packaged file to the commit, or names its inputs and build."
