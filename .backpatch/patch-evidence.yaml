@@ -1,6 +1,6 @@
 schema: osera-patch-evidence/0.1.0
 producer: moderne
-release: 0.7.14-backpatch-00011
+release: 0.7.14-backpatch-00012
 baseline: v0.7.13+backpatch.baseline
 fixes:
   - cve: CVE-2026-34601
@@ -98,12 +98,20 @@ fixes:
     basis: backport
     artifacts:
       - "@xmldom/xmldom"
-    note: "New in this release; upstream's fix in 0.8.15. It closes the advisory: xmldom: Quadratic-memory consumption."
+    note: "Carried from 0.7.14-backpatch-00011; upstream's fix in 0.8.15. It closes the advisory: xmldom: Quadratic-memory consumption."
+  - cve: CVE-2026-83613
+    upstream_fix_url: https://github.com/xmldom/xmldom/commit/08a74b47c7f29d2e9b3212682856b959040d1838
+    advisory_url: https://nvd.nist.gov/vuln/detail/CVE-2026-83613
+    patch_commit_url: https://github.com/moderne-backpatch-alliance/backpatch-xmldom/commit/5e32a55
+    basis: backport
+    artifacts:
+      - "@xmldom/xmldom"
+    note: "New in this release; upstream's fix in 0.8.15 (08a74b4, 2c548f2). It closes the advisory: xmldom: Quadratic-time attribute deduplication."
 tests:
-  commit: 22044972bdc013ca6f115351f33699e226067eb2
+  commit: 5e32a55607655ad1ffd15bb1d00ce227664ef54e
   command: npm pack --ignore-scripts, then jest 27.0.6 --ci on the tested commit's test/ with jest.config.js and package.json beside the packed package's lib/ and index.d.ts (node --stack-size from the commit's config.test_stack_size when set, as its npm test script does), each test recorded into the JUnit report
   runtime: Node.js v22.16.0, jest 27.0.6, macOS 27.2 arm64
-  report: xmldom-0.7.14-backpatch-00011-tests.zip
-  report_sha256: 1ef615ce1af10fdfc89b0fde02268ca08b40e688e48e9e46fdb70c6488c0f091
+  report: xmldom-0.7.14-backpatch-00012-tests.zip
+  report_sha256: a022c790a08056041e97ccacfbf97079da17aacc9626db1a1a2d3ab625ea8338
   result: pass
-  note: "upstream's jest suite (test/, the tested commit's jest.config.js and stack size) on the packed package at the tested commit: 772 tests, 766 passed, 0 failed, 6 skipped. The CVE tests (test/algorithmic-complexity-regression.test.js test/parse/namespace.test.js), with this release's production lines reverted at the tested commit: 5 tests, 4 passed, 1 failed, 0 skipped, test files exiting non-zero: jest; with them: 5 tests, 5 passed, 0 failed, 0 skipped. Built with no build step, npm pack --ignore-scripts in a directory named xmldom, 7 of npmjs's 12 files for 0.7.13 are identical; the rest are index.d.ts, lib/conventions.js, lib/dom.js, lib/sax.js, package.json. The archive's file-origins.yaml maps each packaged file to the commit, or names its inputs and build."
+  note: "upstream's jest suite (test/, the tested commit's jest.config.js and stack size) on the packed package at the tested commit: 779 tests, 773 passed, 0 failed, 6 skipped. The CVE tests (test/algorithmic-complexity-regression.test.js test/dom/named-node-map.test.js), with this release's production lines reverted at the tested commit: 8 tests, 7 passed, 1 failed, 0 skipped, test files exiting non-zero: jest; with them: 8 tests, 8 passed, 0 failed, 0 skipped. Built with no build step, npm pack --ignore-scripts in a directory named xmldom, 7 of npmjs's 12 files for 0.7.13 are identical; the rest are index.d.ts, lib/conventions.js, lib/dom.js, lib/sax.js, package.json. The archive's file-origins.yaml maps each packaged file to the commit, or names its inputs and build."
