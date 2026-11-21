@@ -1,6 +1,6 @@
 {
   "name": "@xmldom/xmldom",
-  "version": "0.7.14-backpatch-00011",
+  "version": "0.7.14-backpatch-00012",
   "description": "A pure JavaScript W3C standard-based (XML DOM Level 2 Core) DOMParser and XMLSerializer module.",
   "keywords": [
     "w3c",
