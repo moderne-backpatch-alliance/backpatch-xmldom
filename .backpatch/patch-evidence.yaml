@@ -1,0 +1,21 @@
+schema: osera-patch-evidence/0.1.0
+producer: moderne
+release: 0.7.14-backpatch-00001
+baseline: v0.7.13+backpatch.baseline
+fixes:
+  - cve: CVE-2026-34601
+    upstream_fix_url: https://github.com/xmldom/xmldom/commit/ed08df7572f4236d4fd88d16063c3fd8f59c7884
+    advisory_url: https://nvd.nist.gov/vuln/detail/CVE-2026-34601
+    patch_commit_url: https://github.com/moderne-backpatch-alliance/backpatch-xmldom/commit/4267fdd
+    basis: backport
+    artifacts:
+      - "@xmldom/xmldom"
+    note: "New in this release; upstream's fix in 0.8.12 (ed08df7, 3a49872, bd0edc9). It closes the advisory: xmldom: XML injection via unsafe CDATA serialization allows attacker-controlled markup insertion."
+tests:
+  commit: 4267fdde8992c688549cd966870561e54593a6e4
+  command: npm pack --ignore-scripts, then jest 27.0.6 --ci on the tested commit's test/ with jest.config.js and package.json beside the packed package's lib/ and index.d.ts (node --stack-size from the commit's config.test_stack_size when set, as its npm test script does), each test recorded into the JUnit report
+  runtime: Node.js v22.16.0, jest 27.0.6, macOS 27.2 arm64
+  report: xmldom-0.7.14-backpatch-00001-tests.zip
+  report_sha256: 197476734dd3b93afd98c33d6079d66188d2f100490ef92582bf766fa6271748
+  result: pass
+  note: "upstream's jest suite (test/, the tested commit's jest.config.js and stack size) on the packed package at the tested commit: 649 tests, 643 passed, 0 failed, 6 skipped. The CVE tests (test/dom/cdata-section.test.js test/dom/serializer.test.js), with this release's production lines reverted at the tested commit: 31 tests, 17 passed, 14 failed, 0 skipped, test files exiting non-zero: jest; with them: 31 tests, 31 passed, 0 failed, 0 skipped. Built with no build step, npm pack --ignore-scripts in a directory named xmldom, 9 of npmjs's 12 files for 0.7.13 are identical; the rest are index.d.ts, lib/dom.js, package.json. The archive's file-origins.yaml maps each packaged file to the commit, or names its inputs and build."
