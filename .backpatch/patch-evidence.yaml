@@ -1,6 +1,6 @@
 schema: osera-patch-evidence/0.1.0
 producer: moderne
-release: 0.7.14-backpatch-00006
+release: 0.7.14-backpatch-00007
 baseline: v0.7.13+backpatch.baseline
 fixes:
   - cve: CVE-2026-34601
@@ -50,7 +50,7 @@ fixes:
     basis: adapted
     artifacts:
       - "@xmldom/xmldom"
-    note: "New in this release; upstream's fix in 0.8.14 (88d9b20, d8212e6), adapted to 0.7.13. It closes the advisory: xmldom: Attribute name injection via setAttribute() bypasses requireWellFormed."
+    note: "Carried from 0.7.14-backpatch-00006; upstream's fix in 0.8.14 (88d9b20, d8212e6), adapted to 0.7.13. It closes the advisory: xmldom: Attribute name injection via setAttribute() bypasses requireWellFormed."
   - cve: CVE-2026-83607
     upstream_fix_url: https://github.com/xmldom/xmldom/commit/88d9b20e9030387b2e97091a47ca89c3aed2d516
     advisory_url: https://nvd.nist.gov/vuln/detail/CVE-2026-83607
@@ -58,12 +58,20 @@ fixes:
     basis: adapted
     artifacts:
       - "@xmldom/xmldom"
-    note: "New in this release; upstream's fix in 0.8.14 (88d9b20, d8212e6), adapted to 0.7.13. It closes the advisory: xmldom: Element name injection via createElement() bypasses requireWellFormed."
+    note: "Carried from 0.7.14-backpatch-00006; upstream's fix in 0.8.14 (88d9b20, d8212e6), adapted to 0.7.13. It closes the advisory: xmldom: Element name injection via createElement() bypasses requireWellFormed."
+  - cve: CVE-2026-83608
+    upstream_fix_url: https://github.com/xmldom/xmldom/commit/85f12eb4d14b44de33216cfb72b50af4d24e9fdd
+    advisory_url: https://nvd.nist.gov/vuln/detail/CVE-2026-83608
+    patch_commit_url: https://github.com/moderne-backpatch-alliance/backpatch-xmldom/commit/ee288a4
+    basis: backport
+    artifacts:
+      - "@xmldom/xmldom"
+    note: "New in this release; upstream's fix in 0.8.15. It closes the advisory: xmldom: DocType `name` Injection Bypasses requireWellFormed."
 tests:
-  commit: 55d0b70e62355b80af89bc5001c2854e8d543a08
+  commit: ee288a474d32dafc11ca16729fc0db0919b202e3
   command: npm pack --ignore-scripts, then jest 27.0.6 --ci on the tested commit's test/ with jest.config.js and package.json beside the packed package's lib/ and index.d.ts (node --stack-size from the commit's config.test_stack_size when set, as its npm test script does), each test recorded into the JUnit report
   runtime: Node.js v22.16.0, jest 27.0.6, macOS 27.2 arm64
-  report: xmldom-0.7.14-backpatch-00006-tests.zip
-  report_sha256: 5349bedd29e6c485e2e4ede02a39a33bd6223e7da692348f94d73ce9c2b22087
+  report: xmldom-0.7.14-backpatch-00007-tests.zip
+  report_sha256: 315970472921461f202098fe576912b432af6fff34ebc963038c705421244a44
   result: pass
-  note: "upstream's jest suite (test/, the tested commit's jest.config.js and stack size) on the packed package at the tested commit: 744 tests, 738 passed, 0 failed, 6 skipped. The CVE tests (test/dom/serializer.test.js), with this release's production lines reverted at the tested commit: 53 tests, 49 passed, 4 failed, 0 skipped, test files exiting non-zero: jest; with them: 53 tests, 53 passed, 0 failed, 0 skipped. Built with no build step, npm pack --ignore-scripts in a directory named xmldom, 7 of npmjs's 12 files for 0.7.13 are identical; the rest are index.d.ts, lib/conventions.js, lib/dom.js, lib/sax.js, package.json. The archive's file-origins.yaml maps each packaged file to the commit, or names its inputs and build."
+  note: "upstream's jest suite (test/, the tested commit's jest.config.js and stack size) on the packed package at the tested commit: 747 tests, 741 passed, 0 failed, 6 skipped. The CVE tests (test/dom/serializer.test.js), with this release's production lines reverted at the tested commit: 56 tests, 54 passed, 2 failed, 0 skipped, test files exiting non-zero: jest; with them: 56 tests, 56 passed, 0 failed, 0 skipped. Built with no build step, npm pack --ignore-scripts in a directory named xmldom, 7 of npmjs's 12 files for 0.7.13 are identical; the rest are index.d.ts, lib/conventions.js, lib/dom.js, lib/sax.js, package.json. The archive's file-origins.yaml maps each packaged file to the commit, or names its inputs and build."
