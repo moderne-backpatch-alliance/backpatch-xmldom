@@ -119,6 +119,24 @@ describe('XML Serializer', () => {
 				'<a:foo xmlns:a="AAA"><child xmlns="BBB"><nested/></child></a:foo>'
 			)
 		})
+		it('namespace declarations are isolated between siblings (no cross-sibling leakage)', () => {
+			// child re-declares xmlns="ns2"; sibling must declare xmlns="ns3" independently.
+			// If the per-level namespace snapshot (ns.slice()) were shared between siblings,
+			// sibling might incorrectly see ns2 in scope and omit its own xmlns declaration.
+			// This confirms correct isolation of the {namespaces, isHTML} context per element.
+			const xml =
+				'<root xmlns="ns1">' +
+				'<child xmlns="ns2"><grandchild xmlns="ns1"/></child>' +
+				'<sibling xmlns="ns3"/>' +
+				'</root>'
+			const nsDoc = new DOMParser().parseFromString(xml, MIME_TYPE.XML_TEXT)
+			expect(new XMLSerializer().serializeToString(nsDoc)).toBe(
+				'<root xmlns="ns1">' +
+					'<child xmlns="ns2"><grandchild xmlns="ns1"/></child>' +
+					'<sibling xmlns="ns3"/>' +
+					'</root>'
+			)
+		})
 	})
 	describe('is insensitive to namespace order', () => {
 		it('should preserve prefixes for inner elements and attributes', () => {
@@ -565,6 +583,42 @@ describe('XMLSerializer serializeToString requireWellFormed option', () => {
 					requireWellFormed: true,
 				})
 			).toThrow(DOMException)
+		})
+	})
+
+	describe('EntityReference', () => {
+		test('serializes EntityReference node as &name;', () => {
+			const xmlDoc = new DOMImplementation().createDocument(null, '')
+			const entityRef = xmlDoc.createEntityReference('amp')
+			expect(new XMLSerializer().serializeToString(entityRef)).toBe('&amp;')
+		})
+	})
+
+	describe('unknown node type (default case)', () => {
+		test('serializes unrecognized node type with "??" prefix', () => {
+			const xmlDoc = new DOMImplementation().createDocument(null, '')
+			// Construct a duck-typed node with a non-standard nodeType to exercise the default branch.
+			const fakeNode = {
+				nodeType: 99,
+				nodeName: 'fake',
+				ownerDocument: xmlDoc,
+				firstChild: null,
+			}
+			expect(new XMLSerializer().serializeToString(fakeNode)).toBe('??fake')
+		})
+	})
+
+	describe('HTML raw text element with non-data child', () => {
+		test('falls back to full serialization for a child with empty data inside <script>', () => {
+			const doc = new DOMParser().parseFromString('<html/>', MIME_TYPE.HTML)
+			const script = doc.createElement('script')
+			// A ProcessingInstruction with empty data has child.data === '' (falsy),
+			// which triggers the serializeToString fallback path inside raw text elements.
+			const pi = doc.createProcessingInstruction('target', '')
+			script.appendChild(pi)
+			expect(new XMLSerializer().serializeToString(script)).toBe(
+				'<script><?target ?></script>'
+			)
 		})
 	})
 })
