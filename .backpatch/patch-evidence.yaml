@@ -1,6 +1,6 @@
 schema: osera-patch-evidence/0.1.0
 producer: moderne
-release: 0.7.14-backpatch-00003
+release: 0.7.14-backpatch-00004
 baseline: v0.7.13+backpatch.baseline
 fixes:
   - cve: CVE-2026-34601
@@ -26,12 +26,20 @@ fixes:
     basis: backport
     artifacts:
       - "@xmldom/xmldom"
-    note: "New in this release; upstream's fix in 0.8.13. It closes the advisory: xmldom has XML node injection through unvalidated processing instruction serialization."
+    note: "Carried from 0.7.14-backpatch-00003; upstream's fix in 0.8.13. It closes the advisory: xmldom has XML node injection through unvalidated processing instruction serialization."
+  - cve: CVE-2026-41674
+    upstream_fix_url: https://github.com/xmldom/xmldom/commit/6ca3a416353a4d3143d172c5240c138e296a3258
+    advisory_url: https://nvd.nist.gov/vuln/detail/CVE-2026-41674
+    patch_commit_url: https://github.com/moderne-backpatch-alliance/backpatch-xmldom/commit/1f79bcb
+    basis: backport
+    artifacts:
+      - "@xmldom/xmldom"
+    note: "New in this release; upstream's fix in 0.8.13. It closes the advisory: xmldom has XML injection through unvalidated DocumentType serialization."
 tests:
-  commit: 4f1fb23106b45193b5c183f2b5f0908378b0f5d4
+  commit: 1f79bcb2ec4b8e93bea5cf56d38e13845c6bf8da
   command: npm pack --ignore-scripts, then jest 27.0.6 --ci on the tested commit's test/ with jest.config.js and package.json beside the packed package's lib/ and index.d.ts (node --stack-size from the commit's config.test_stack_size when set, as its npm test script does), each test recorded into the JUnit report
   runtime: Node.js v22.16.0, jest 27.0.6, macOS 27.2 arm64
-  report: xmldom-0.7.14-backpatch-00003-tests.zip
-  report_sha256: a912fc4df3165fe0cb3961765ca8b230d812ba365856653143b4650f457dae8c
+  report: xmldom-0.7.14-backpatch-00004-tests.zip
+  report_sha256: 606dd104ad4067d04ee23a37acaf8d3cbc5ceda0d4c56a8596591f80b2a8d2a3
   result: pass
-  note: "upstream's jest suite (test/, the tested commit's jest.config.js and stack size) on the packed package at the tested commit: 658 tests, 652 passed, 0 failed, 6 skipped. The CVE tests (test/dom/processing-instruction.test.js test/dom/serializer.test.js), with this release's production lines reverted at the tested commit: 34 tests, 32 passed, 2 failed, 0 skipped, test files exiting non-zero: jest; with them: 34 tests, 34 passed, 0 failed, 0 skipped. Built with no build step, npm pack --ignore-scripts in a directory named xmldom, 9 of npmjs's 12 files for 0.7.13 are identical; the rest are index.d.ts, lib/dom.js, package.json. The archive's file-origins.yaml maps each packaged file to the commit, or names its inputs and build."
+  note: "upstream's jest suite (test/, the tested commit's jest.config.js and stack size) on the packed package at the tested commit: 664 tests, 658 passed, 0 failed, 6 skipped. The CVE tests (test/dom/serializer.test.js), with this release's production lines reverted at the tested commit: 39 tests, 35 passed, 4 failed, 0 skipped, test files exiting non-zero: jest; with them: 39 tests, 39 passed, 0 failed, 0 skipped. Built with no build step, npm pack --ignore-scripts in a directory named xmldom, 9 of npmjs's 12 files for 0.7.13 are identical; the rest are index.d.ts, lib/dom.js, package.json. The archive's file-origins.yaml maps each packaged file to the commit, or names its inputs and build."
